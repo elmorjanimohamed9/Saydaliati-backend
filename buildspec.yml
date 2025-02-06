@@ -18,35 +18,16 @@ phases:
     commands:
       - echo "Building NestJS application..."
       - npm run build
-      - echo "Build completed"
       
   post_build:
     commands:
       - echo "Starting post-build phase..."
       - npm ci --only=production
-      - echo "Removing development files..."
-      - rm -rf src/
-      - rm -rf test/
-      - rm -rf coverage/
-      - rm -rf node_modules/.cache
-      - echo "Post-build completed"
 
 artifacts:
   files:
-    - dist/**/*
-    - node_modules/**/*
-    - package.json
-    - package-lock.json
-    - ecosystem.config.js
-  exclude-paths:
-    - '**/*.ts'
-    - '**/*.map'
-    - '**/test/**'
-    - '**/tests/**'
-    - '**/*.md'
-    - 'node_modules/**/*.txt'
+    - '**/*'
   base-directory: '.'
-  discard-paths: no
 
 cache:
   paths:

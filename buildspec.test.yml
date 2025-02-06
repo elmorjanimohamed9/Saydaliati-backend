@@ -13,6 +13,8 @@ phases:
       - echo "Starting test phase..."
       - node --version
       - npm --version
+      - pwd
+      - ls -la
       
   build:
     commands:
@@ -23,11 +25,10 @@ phases:
     commands:
       - echo "Tests completed"
 
-reports:
-  jest_reports:
-    files:
-      - 'coverage/clover.xml'
-    file-format: CLOVERXML
+artifacts:
+  files:
+    - coverage/**/*
+  base-directory: '.'
 
 cache:
   paths:
