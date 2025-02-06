@@ -1,0 +1,34 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+    commands:
+      - npm install -g npm@10.8.2
+      - npm ci
+      
+  pre_build:
+    commands:
+      - echo "Starting test phase..."
+      - node --version
+      - npm --version
+      
+  build:
+    commands:
+      - echo "Running tests..."
+      - npm run test
+      
+  post_build:
+    commands:
+      - echo "Tests completed"
+
+reports:
+  jest_reports:
+    files:
+      - 'coverage/clover.xml'
+    file-format: CLOVERXML
+
+cache:
+  paths:
+    - node_modules/**/*

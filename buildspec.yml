@@ -5,25 +5,31 @@ phases:
     runtime-versions:
       nodejs: 20
     commands:
-      - npm install -g @nestjs/cli
+      - npm install -g npm@10.8.2
       - npm ci
       
   pre_build:
     commands:
-      - echo "Running tests..."
-      - npm run test
+      - echo "Starting build phase..."
+      - node --version
+      - npm --version
       
   build:
     commands:
-      - echo "Building the NestJS application..."
+      - echo "Building NestJS application..."
       - npm run build
-      - echo "Build completed successfully"
+      - echo "Build completed"
       
   post_build:
     commands:
-      - echo "Preparing production dependencies..."
+      - echo "Starting post-build phase..."
       - npm ci --only=production
-      - echo "Post build completed"
+      - echo "Removing development files..."
+      - rm -rf src/
+      - rm -rf test/
+      - rm -rf coverage/
+      - rm -rf node_modules/.cache
+      - echo "Post-build completed"
 
 artifacts:
   files:
@@ -31,6 +37,15 @@ artifacts:
     - node_modules/**/*
     - package.json
     - package-lock.json
+    - ecosystem.config.js
+  exclude-paths:
+    - '**/*.ts'
+    - '**/*.map'
+    - '**/test/**'
+    - '**/tests/**'
+    - '**/*.md'
+    - 'node_modules/**/*.txt'
+  base-directory: '.'
   discard-paths: no
 
 cache:
