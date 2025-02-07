@@ -1,35 +1,38 @@
-   version: 0.2
+version: 0.2
 
-   phases:
-     install:
-       runtime-versions:
-         nodejs: 20
-       commands:
-         - npm install -g npm@10.8.2
-         - npm install -g @nestjs/cli
-         - npm ci
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+    commands:
+      - npm install -g npm@10.8.2
+      - npm install -g @nestjs/cli
+      - npm ci
 
-     pre_build:
-       commands:
-         - echo "Starting build phase..."
-         - node --version
-         - npm --version
+  pre_build:
+    commands:
+      - echo "Starting build phase..."
+      - node --version
+      - npm --version
 
-     build:
-       commands:
-         - echo "Building NestJS application..."
-         - npm run build
+  build:
+    commands:
+      - echo "Building NestJS application..."
+      - npm run build
 
-     post_build:
-       commands:
-         - echo "Starting post-build phase..."
-         - npm ci --only=production
+  post_build:
+    commands:
+      - echo "Starting post-build phase..."
+      - npm ci --only=production
 
-   artifacts:
-     files:
-       - '**/*'
-     base-directory: '.'
+artifacts:
+  files:
+    - package.json
+    - package-lock.json
+    - dist/**/*
+    - node_modules/**/*
+  base-directory: '.'
 
-   cache:
-     paths:
-       - node_modules/**/*
+cache:
+  paths:
+    - node_modules/**/*
