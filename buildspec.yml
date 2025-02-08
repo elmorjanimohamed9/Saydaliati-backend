@@ -14,9 +14,10 @@ phases:
       - npm run build
   post_build:
     commands:
-      - cp appspec.yml dist/
-      - cp -r scripts dist/
-      - cp .env dist/
+      - if [ -f appspec.yml ]; then cp appspec.yml dist/; fi
+      - mkdir -p dist/scripts
+      - if [ -d scripts ]; then cp -r scripts/* dist/scripts/; fi
+      - if [ -f .env ]; then cp .env dist/; fi
 artifacts:
   files:
     - '**/*'
