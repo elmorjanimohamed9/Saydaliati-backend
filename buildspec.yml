@@ -16,6 +16,7 @@ phases:
     commands:
       - cp appspec.yml dist/
       - cp -r scripts dist/
+      - cp .env dist/
 artifacts:
   files:
     - '**/*'
