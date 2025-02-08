@@ -1,4 +1,3 @@
-# appspec.yml
 version: 0.0
 os: linux
 files:
@@ -10,12 +9,11 @@ permissions:
     owner: ec2-user
     group: ec2-user
     mode: 755
-  - object: /var/www/nestjs-app/scripts
-    pattern: "*.sh"
-    owner: ec2-user
-    group: ec2-user
-    mode: 755
 hooks:
+  ApplicationStop:
+    - location: scripts/stop_application.sh
+      timeout: 300
+      runas: root
   BeforeInstall:
     - location: scripts/before_install.sh
       timeout: 300
