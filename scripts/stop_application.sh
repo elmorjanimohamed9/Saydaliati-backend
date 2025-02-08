@@ -6,6 +6,7 @@ if ! command -v pm2 &> /dev/null; then
     npm install -g pm2 || {
         echo "Failed to install PM2"
         exit 0
+    }  # Added missing closing brace here
 fi
 
 # Stop application if it's running
