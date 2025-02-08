@@ -28,7 +28,7 @@ else
     echo "No existing application found to stop"
 fi
 
-# Clean up PM2 processes
+# Clean up PM2 processes if needed
 pm2 kill || true
 
 # Exit successfully
