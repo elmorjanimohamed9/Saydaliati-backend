@@ -13,7 +13,7 @@ if ! command -v pm2 &> /dev/null; then
     npm install -g pm2
     if [ $? -ne 0 ]; then
         echo "Failed to install PM2"
-        exit 0
+        exit 1  # Changed from 0 to 1 to indicate error
     fi
 fi
 
