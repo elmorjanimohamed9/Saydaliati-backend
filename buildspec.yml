@@ -1,5 +1,4 @@
 version: 0.2
-
 phases:
   install:
     runtime-versions:
@@ -7,15 +6,16 @@ phases:
   pre_build:
     commands:
       - npm install
-      - npm --version
-      - node --version
   build:
     commands:
       - npm run build
   post_build:
     commands:
+      - mkdir -p dist/scripts
+      - cp -r scripts/* dist/scripts/
+      - chmod +x dist/scripts/*.sh
       - cp appspec.yml dist/
-      - cp -r scripts dist/
+      - cp package.json dist/
 artifacts:
   files:
     - '**/*'

@@ -1,8 +1,20 @@
+# appspec.yml
 version: 0.0
 os: linux
 files:
   - source: /
     destination: /var/www/nestjs-app
+permissions:
+  - object: /var/www/nestjs-app
+    pattern: "**"
+    owner: ec2-user
+    group: ec2-user
+    mode: 755
+  - object: /var/www/nestjs-app/scripts
+    pattern: "*.sh"
+    owner: ec2-user
+    group: ec2-user
+    mode: 755
 hooks:
   BeforeInstall:
     - location: scripts/before_install.sh
@@ -14,5 +26,9 @@ hooks:
       runas: root
   ApplicationStart:
     - location: scripts/start_application.sh
+      timeout: 300
+      runas: root
+  ValidateService:
+    - location: scripts/validate_service.sh
       timeout: 300
       runas: root

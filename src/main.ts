@@ -10,6 +10,12 @@ async function bootstrap() {
     credentials: true,
   });
 
+  // Get the underlying Express instance
+  const expressApp = app.getHttpAdapter().getInstance();
+
+  // Add health check endpoint using Express
+  expressApp.get('/health', (req, res) => res.send('OK'));
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
