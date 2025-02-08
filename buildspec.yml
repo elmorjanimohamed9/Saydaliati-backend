@@ -4,32 +4,19 @@ phases:
   install:
     runtime-versions:
       nodejs: 20
-    commands:
-      - npm install -g npm@10.8.2
-      - npm install -g @nestjs/cli
-      - npm ci
-
   pre_build:
     commands:
-      - echo "Starting build phase..."
-      - node --version
+      - npm install
       - npm --version
-
+      - node --version
   build:
     commands:
-      - echo "Building NestJS application..."
       - npm run build
-
   post_build:
     commands:
-      - echo "Starting post-build phase..."
-      - npm ci --only=production
-
+      - cp appspec.yml dist/
+      - cp -r scripts dist/
 artifacts:
   files:
     - '**/*'
   base-directory: dist
-
-cache:
-  paths:
-    - node_modules/**/*
