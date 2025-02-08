@@ -1,4 +1,4 @@
 #!/bin/bash
 cd /var/www/nestjs-app
-pm2 stop all
-pm2 start dist/main.js --name nestjs-app
+npm install --production 
+pm2 start main.js --name nestjs-app
