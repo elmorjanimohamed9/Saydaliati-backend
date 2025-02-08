@@ -8,17 +8,20 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 # Check if PM2 is installed
-if ! command -v pm2 &> /dev/null; then
+if ! command -v pm2 &> /dev/null
+then
     echo "PM2 not found, installing..."
     npm install -g pm2
-    if [ $? -ne 0 ]; then
+    if [ $? -ne 0 ]
+    then
         echo "Failed to install PM2"
         exit 0
     fi
 fi
 
 # Stop application if it's running
-if pm2 list | grep -q "nestjs-app" 2>/dev/null; then
+if pm2 list | grep -q "nestjs-app" 2>/dev/null
+then
     echo "Stopping existing application..."
     pm2 stop nestjs-app 2>/dev/null || true
     pm2 delete nestjs-app 2>/dev/null || true
