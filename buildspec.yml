@@ -27,11 +27,8 @@ phases:
 
 artifacts:
   files:
-    - package.json
-    - package-lock.json
-    - dist/**/*
-    - node_modules/**/*
-  base-directory: '.'
+    - '**/*'
+  base-directory: dist
 
 cache:
   paths:
