@@ -1,23 +1,36 @@
 #!/bin/bash
 
+# Exit on error
+set -e
+
+# Load NVM if available
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
 # Check if PM2 is installed
 if ! command -v pm2 &> /dev/null; then
     echo "PM2 not found, installing..."
-    npm install -g pm2 || {
+    npm install -g pm2
+    if [ $? -ne 0 ]; then
         echo "Failed to install PM2"
         exit 0
-    }  # Added missing closing brace here
+    fi
 fi
 
 # Stop application if it's running
-if pm2 list | grep -q "nestjs-app"; then
+if pm2 list | grep -q "nestjs-app" 2>/dev/null; then
     echo "Stopping existing application..."
-    pm2 stop nestjs-app || true
-    pm2 delete nestjs-app || true
-    pm2 save || true
+    pm2 stop nestjs-app 2>/dev/null || true
+    pm2 delete nestjs-app 2>/dev/null || true
+    pm2 save 2>/dev/null || true
+    echo "Application stopped successfully"
 else
     echo "No existing application found to stop"
 fi
 
-# Always exit successfully to prevent first-time deployment failures
+# Clean up PM2 processes if needed
+pm2 kill 2>/dev/null || true
+
+# Always exit successfully
+echo "Stop script completed successfully"
 exit 0
