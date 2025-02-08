@@ -1,21 +1,13 @@
 #!/bin/bash
 
-# Load NVM
+# Exit on error
+set -e
+
+cd /var/www/nestjs-app
+
+# Load NVM if available
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  || {
-    echo "NVM not found, continuing anyway..."
-}
-
-cd /var/www/nestjs-app || {
-    echo "Failed to change directory"
-    exit 1
-}
-
-# Create .env file
-./scripts/set-env.sh || {
-    echo "Failed to create .env file"
-    exit 1
-}
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 # Ensure PM2 is installed
 if ! command -v pm2 &> /dev/null; then
@@ -23,9 +15,23 @@ if ! command -v pm2 &> /dev/null; then
     npm install -g pm2
 fi
 
-# Stop any existing process
-pm2 stop nestjs-app 2>/dev/null || true
-pm2 delete nestjs-app 2>/dev/null || true
+# Install dependencies if needed
+if [ ! -d "node_modules" ]; then
+    echo "Installing dependencies..."
+    npm install
+fi
+
+# Build the application if needed
+if [ ! -d "dist" ]; then
+    echo "Building application..."
+    npm run build
+fi
+
+# Verify dist/main.js exists
+if [ ! -f "dist/main.js" ]; then
+    echo "Error: dist/main.js not found!"
+    exit 1
+fi
 
 # Start application
 echo "Starting application with PM2..."
@@ -41,18 +47,12 @@ pm2 save
 echo "Waiting for application to start..."
 sleep 10
 
-# Health check with retry
-MAX_RETRIES=3
-RETRY_COUNT=0
-while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-    if curl -s http://localhost:3000/health > /dev/null; then
-        echo "Application started successfully"
-        exit 0
-    fi
-    RETRY_COUNT=$((RETRY_COUNT+1))
-    echo "Health check failed, attempt $RETRY_COUNT of $MAX_RETRIES"
-    sleep 5
-done
-
-echo "Application failed to start properly"
-exit 1
+# Health check
+if curl -s http://localhost:3000/health > /dev/null; then
+    echo "Application started successfully"
+    exit 0
+else
+    echo "Application failed to start"
+    pm2 logs nestjs-app --lines 50
+    exit 1
+fi
