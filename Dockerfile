@@ -10,6 +10,8 @@ COPY . .
 
 RUN npm run build
 
+# Add path verification
+RUN test -f dist/src/main.js || (echo "❌ main.js not found at dist/src/main.js!" && exit 1)
 
 #prod stage
 FROM node:20-alpine
