@@ -2,7 +2,7 @@ FROM node:20-alpine AS build
 
 WORKDIR /app/
 
-COPY package*.json ./
+COPY package.json ./
 
 RUN npm install
 
@@ -21,7 +21,7 @@ ENV NODE_ENV=${NODE_ENV}
 
 COPY --from=build /app/dist ./dist
 
-COPY --from=build /app/package*.json ./
+COPY --from=build /app/package.json ./
 
 RUN npm install --only=production
 
