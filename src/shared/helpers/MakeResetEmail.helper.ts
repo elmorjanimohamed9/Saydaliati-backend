@@ -1,4 +1,4 @@
-export const MakeResetEmail = (resetLink: string, name: string): string => {
+export const MakeResetEmail = (resetLink: string): string => {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
