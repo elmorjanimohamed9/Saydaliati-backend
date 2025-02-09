@@ -21,7 +21,7 @@ jobs:
       - name: Run Docker Container
         id: run-container
         run: |
-          sudo docker run -d -p 3000:3000 --name saydaliati-backend-app-container \
+          sudo docker run -d -p 3001:3001 --name saydaliati-backend-app-container \
             -e PORT="${{ secrets.PORT }}" \
             -e APP_URL="${{ secrets.APP_URL }}" \
             -e CLIENT_URL="${{ secrets.CLIENT_URL }}" \
