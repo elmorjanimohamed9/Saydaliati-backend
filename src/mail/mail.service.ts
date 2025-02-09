@@ -45,7 +45,7 @@ export class MailService {
 
     try {
       await this.transporter.sendMail(emailData);
-    } catch (error) {
+    } catch {
       throw new Error('Failed to send password reset email');
     }
   }
