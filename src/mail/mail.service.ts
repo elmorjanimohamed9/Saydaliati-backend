@@ -40,7 +40,7 @@ export class MailService {
     const emailData = {
       to: email,
       subject: 'Reset Your Password',
-      html: MakeResetEmail(resetLink, name),
+      html: MakeResetEmail({ resetLink, name }),
     };
 
     try {
