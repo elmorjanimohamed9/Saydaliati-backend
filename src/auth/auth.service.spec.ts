@@ -6,7 +6,6 @@ import { MailService } from '@/mail/mail.service';
 import { UserRole } from './interfaces/auth.interfaces';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
-// Mock Firebase Admin
 jest.mock('firebase-admin', () => ({
   auth: () => ({
     generateEmailVerificationLink: jest
@@ -21,7 +20,6 @@ jest.mock('firebase-admin', () => ({
   },
 }));
 
-// Mock Firebase Auth
 jest.mock('firebase/auth', () => ({
   signInWithEmailAndPassword: jest.fn(),
 }));
