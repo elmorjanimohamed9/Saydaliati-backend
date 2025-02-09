@@ -193,7 +193,6 @@ export class AuthService {
         password: data.newPassword,
       });
 
-      // Log the password change in Firestore
       await this.firebaseService
         .collection('users')
         .doc(userRecord.uid)
