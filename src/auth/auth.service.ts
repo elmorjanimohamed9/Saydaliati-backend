@@ -73,7 +73,6 @@ export class AuthService {
   // Login an existing user
   async login(credentials: UserCredentials): Promise<AuthResponse> {
     try {
-      // Get the client auth instance from FirebaseService
       const auth = this.firebaseService.getClientAuth();
 
       // Verify password using Firebase Client SDK
