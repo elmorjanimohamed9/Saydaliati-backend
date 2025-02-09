@@ -8,6 +8,10 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
+      - name: Clean Docker Environment
+        run: |
+          sudo docker system prune -a --force
+          sudo df -h
       - name: Pull Docker image
         run: |
           echo "Pulling latest Docker image..."
