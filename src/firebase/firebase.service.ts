@@ -14,7 +14,7 @@ export class FirebaseService implements OnModuleInit {
   private readonly logger = new Logger(FirebaseService.name);
   public firestore: admin.firestore.Firestore;
   public auth: admin.auth.Auth;
-  public clientAuth: any; // Firebase Client Auth
+  public clientAuth: any;
 
   constructor(private configService: ConfigService) {}
 
@@ -79,7 +79,7 @@ export class FirebaseService implements OnModuleInit {
   async verifyToken(token: string) {
     try {
       return await this.auth.verifyIdToken(token);
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException('Invalid token');
     }
   }
