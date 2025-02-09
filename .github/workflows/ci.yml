@@ -1,0 +1,48 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_run:
+    workflows: ["Tests"]
+    types:
+      - completed
+    branches: [ "main" ]
+
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Dockerhub
+        run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+        continue-on-error: false
+
+      - name: Build the Docker image
+        id: build
+        run: docker build -t elmorjani/saydaliati-backend-app .
+
+      - name: Push to Dockerhub
+        run: docker push elmorjani/saydaliati-backend-app:latest
+
+      - name: Build Success Message
+        if: success()
+        run: |
+          echo "✅ Docker image built and pushed successfully!"
+          echo "Image: elmorjani/saydaliati-backend-app:latest"
+          echo "Repository: Dockerhub"
+
+      - name: Build Failure Message
+        if: failure()
+        run: |
+          echo "❌ Docker build or push failed!"
+          echo "Please check the build logs above for errors."
+          echo "Ensure Docker credentials are correctly configured."

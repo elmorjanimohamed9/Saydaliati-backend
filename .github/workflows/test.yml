@@ -1,0 +1,54 @@
+name: Tests
+on:
+  pull_request:
+    branches: [ "main", "develop" ]
+jobs:
+  lint:
+    name: Code Linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+         
+      - name: Install dependencies
+        run: npm ci
+      - name: Run linting
+        run: npm run lint
+        
+  unit-tests:
+    name: Unit Tests
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Tests with Coverage
+        id: run-tests
+        run: |
+          npm run test:cov
+
+      - name: Test Success Message
+        if: success()
+        run: |
+          echo "✅ Tests passed successfully!"
+          echo "Coverage report generated."
+          
+      - name: Test Failure Message
+        if: failure()
+        run: |
+          echo "❌ Tests failed!"
+          echo "Please check the test output above for details."
