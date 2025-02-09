@@ -16,41 +16,43 @@ jobs:
       - name: Stop Old Container
         run: |
           echo "Stopping old container if exists..."
-          sudo docker rm -f saydaliati-backend-app-container || true
+          sudo docker stop saydaliati-backend-app-container || true
+          sudo docker rm saydaliati-backend-app-container || true
       
       - name: Run Docker Container
         id: run-container
         run: |
-          sudo docker run -d -p 3001:3001 --name saydaliati-backend-app-container \
-            -e PORT="${{ secrets.PORT }}" \
-            -e APP_URL="${{ secrets.APP_URL }}" \
-            -e CLIENT_URL="${{ secrets.CLIENT_URL }}" \
-            -e FIREBASE_PROJECT="${{ secrets.FIREBASE_PROJECT }}" \
-            -e FIREBASE_PRIVATE_KEY="${{ secrets.FIREBASE_PRIVATE_KEY }}" \
-            -e FIREBASE_CLIENT_EMAIL="${{ secrets.FIREBASE_CLIENT_EMAIL }}" \
-            -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" \
-            -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-            -e AWS_S3_BUCKET_NAME="${{ secrets.AWS_S3_BUCKET_NAME }}" \
-            -e AWS_REGION="${{ secrets.AWS_REGION }}" \
-            -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
-            -e EMAIL_USER="${{ secrets.EMAIL_USER }}" \
-            -e EMAIL_PASS="${{ secrets.EMAIL_PASS }}" \
-            -e EMAIL_FROM="${{ secrets.EMAIL_FROM }}" \
-            elmorjani/saydaliati-backend-app
+          sudo docker run -d \
+            --restart unless-stopped \
+            --name saydaliati-backend-app-container \
+            -p 3001:3001 \
+            --env-file <(cat << EOF
+          PORT=${{ secrets.PORT }}
+          APP_URL=${{ secrets.APP_URL }}
+          CLIENT_URL=${{ secrets.CLIENT_URL }}
+          FIREBASE_PROJECT=${{ secrets.FIREBASE_PROJECT }}
+          FIREBASE_PRIVATE_KEY=${{ secrets.FIREBASE_PRIVATE_KEY }}
+          FIREBASE_CLIENT_EMAIL=${{ secrets.FIREBASE_CLIENT_EMAIL }}
+          AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}
+          AWS_REGION=${{ secrets.AWS_REGION }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          EMAIL_USER=${{ secrets.EMAIL_USER }}
+          EMAIL_PASS=${{ secrets.EMAIL_PASS }}
+          EMAIL_FROM=${{ secrets.EMAIL_FROM }}
+          EOF
+          ) \
+          elmorjani/saydaliati-backend-app:latest
 
-      - name: Log Docker Container Output
-        run: |
-          echo "Fetching Docker container logs..."
-          sudo docker logs saydaliati-backend-app-container || true
+      - name: Wait for container to start
+        run: sleep 10
 
-      - name: Verify Container Status
-        id: verify
+      - name: Check Container Health
         run: |
-          if [ "$(sudo docker inspect -f '{{.State.Running}}' saydaliati-backend-app-container)" = "true" ]; then
-            echo "Container is running successfully"
-            exit 0
-          else
-            echo "Container failed to start properly"
+          if ! sudo docker ps --filter "name=saydaliati-backend-app-container" --format "{{.Status}}" | grep -q "Up"; then
+            echo "Container failed to start properly. Checking logs..."
+            sudo docker logs saydaliati-backend-app-container
             exit 1
           fi
 
@@ -59,17 +61,12 @@ jobs:
         run: |
           echo "✅ Deployment Successful!"
           echo "Container Name: saydaliati-backend-app-container"
-          echo "Port: 3000"
-          echo "Status: Running"
-          echo "Application is now live and accepting connections"
+          echo "Port: 3001"
+          echo "Status: $(sudo docker ps --filter name=saydaliati-backend-app-container --format '{{.Status}}')"
 
       - name: Deployment Failure Message
         if: failure()
         run: |
           echo "❌ Deployment Failed!"
-          echo "Error: Container failed to deploy properly"
-          echo "Debug Steps:"
-          echo "1. Check container logs above"
-          echo "2. Verify all environment variables are properly set"
-          echo "3. Check system resources and port availability"
-          sudo docker logs saydaliati-backend-app-container || true
+          echo "Container Logs:"
+          sudo docker logs saydaliati-backend-app-container
