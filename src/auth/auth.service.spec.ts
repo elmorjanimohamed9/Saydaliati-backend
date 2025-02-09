@@ -20,7 +20,6 @@ jest.mock('firebase-admin', () => ({
   },
 }));
 
-// Mock Firebase Auth
 jest.mock('firebase/auth', () => ({
   signInWithEmailAndPassword: jest.fn(),
 }));
