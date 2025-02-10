@@ -11,13 +11,7 @@ import { S3Module } from './s3/s3.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    FirebaseModule,
-    AuthModule,
-    PharmacyModule,
-    S3Module,
+    
   ],
   controllers: [AppController, PharmacyController],
   providers: [AppService, PharmacyService],
