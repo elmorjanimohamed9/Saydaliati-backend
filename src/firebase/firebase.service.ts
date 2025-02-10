@@ -23,15 +23,15 @@ export class FirebaseService implements OnModuleInit {
       // Initialize Admin SDK if not already initialized
       if (!admin.apps.length) {
         const serviceAccount = {
-          projectId: 'saydaliati-9208e',
-          clientEmail: this.configService.get<string>('FIREBASE_CLIENT_EMAIL'),
-          privateKey: this.configService
+          project_id: this.configService.get<string>('FIREBASE_PROJECT_ID'),
+          client_email: this.configService.get<string>('FIREBASE_CLIENT_EMAIL'),
+          private_key: this.configService
             .get<string>('FIREBASE_PRIVATE_KEY')
             ?.replace(/\\n/g, '\n'),
         };
 
         this.logger.log(
-          `Initializing Firebase Admin with project ID: ${serviceAccount.projectId}`,
+          `Initializing Firebase Admin with project ID: ${serviceAccount.project_id}`,
         );
 
         admin.initializeApp({
@@ -48,7 +48,7 @@ export class FirebaseService implements OnModuleInit {
         const clientConfig = {
           apiKey: this.configService.get<string>('FIREBASE_API_KEY'),
           authDomain: this.configService.get<string>('FIREBASE_AUTH_DOMAIN'),
-          projectId: 'saydaliati-9208e',
+          projectId: this.configService.get<string>('FIREBASE_PROJECT_ID'),
         };
 
         const clientApp = initializeApp(clientConfig);
