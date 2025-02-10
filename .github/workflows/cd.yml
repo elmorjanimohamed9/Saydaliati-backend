@@ -27,7 +27,7 @@ jobs:
             -e PORT="${{ secrets.PORT }}" \
             -e APP_URL="${{ secrets.APP_URL }}" \
             -e CLIENT_URL="${{ secrets.CLIENT_URL }}" \
-            -e FIREBASE_PROJECT_ID="${{ secrets.FIREBASE_PROJECT }}" \
+            -e FIREBASE_PROJECT_ID="${{ secrets.FIREBASE_PROJECT_ID }}"
             -e FIREBASE_PRIVATE_KEY="${{ secrets.FIREBASE_PRIVATE_KEY }}" \
             -e FIREBASE_CLIENT_EMAIL="${{ secrets.FIREBASE_CLIENT_EMAIL }}" \
             -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" \
