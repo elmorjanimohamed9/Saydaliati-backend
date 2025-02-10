@@ -10,22 +10,22 @@ COPY . .
 
 RUN npm run build
 
-RUN test -f dist/src/main.js || (echo "❌ main.js not found at dist/src/main.js!" && exit 1)
+CMD ["npm", "run","start:dev"]
 
 #prod stage
-FROM node:20-alpine
+# FROM node:20-alpine
 
-WORKDIR /app/
+# WORKDIR /app/
 
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+# ARG NODE_ENV=production
+# ENV NODE_ENV=${NODE_ENV}
 
-COPY --from=build /app/dist ./dist
+# COPY --from=build /app/dist ./dist
 
-COPY --from=build /app/package.json ./
+# COPY --from=build /app/package.json ./
 
-RUN npm install --only=production
+# RUN npm install --only=production
 
-EXPOSE 3000
+# EXPOSE 3000
 
-CMD ["node", "dist/main.js"]
+# CMD ["npm", "run","start:dev"]
