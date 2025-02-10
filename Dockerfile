@@ -12,6 +12,7 @@ RUN npm run build
 
 CMD ["npm", "run","start:prod"]
 
+
 #prod stage
 # FROM node:20-alpine
 
