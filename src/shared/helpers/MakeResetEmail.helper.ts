@@ -1,5 +1,5 @@
 export const MakeResetEmail = (resetLink: string, name: string): string => {
-    return `<!DOCTYPE html>
+  return `<!DOCTYPE html>
   <html lang="en">
   <head>
       <meta charset="UTF-8">
@@ -87,4 +87,4 @@ export const MakeResetEmail = (resetLink: string, name: string): string => {
       </div>
   </body>
   </html>`;
-  };
+};
